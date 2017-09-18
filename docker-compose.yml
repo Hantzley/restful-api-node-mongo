@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  application:
+    build: ./node-app
+    volumes:
+      - ./node-app:/usr/src/app
+    ports:
+      - "3000:3000"
+    networks:
+      app-network:
+        ipv4_address: 172.29.0.10
+    container_name: node-app
+    depends_on:
+      - database
+
+  database:
+    image: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      app-network:
+        ipv4_address: 172.29.0.20
+    container_name: database
+
+
+networks:
+  app-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.29.0.0/16
